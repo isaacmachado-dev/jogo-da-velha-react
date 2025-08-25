@@ -1,6 +1,6 @@
 # Jogo da Velha com: React + TypeScript + Vite
 
-Esse é um jogo da velha com React, TypScripte, Tailwind e Vite.
+Esse é um jogo da velha com React, TypScript, Tailwind e Vite.
 
 
 
