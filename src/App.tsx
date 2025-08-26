@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
 import './App.css';
 import hashIcon from './assets/hash.svg';
+import { getAiMove } from './services/aiService';
 
 
 type SquareProps = {
@@ -11,20 +13,53 @@ type SquareProps = {
 
 type GameProps = {
   onBack: () => void;
+  isAiMode: boolean;
 };
 
-function StartScreen({ onStart }: { onStart: () => void }) {
+
+function StartScreen({ onStart }: { onStart: (aiMode: boolean) => void }) {
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Fecha dropdown ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   function logo() {
     return <img src={hashIcon} alt="Hash Icon" className="logo" />;
   }
+
   return (
     <div className="start-screen">
       {logo()}
       <h1>Jogo da Velha</h1>
-      <button onClick={onStart} className="start-button">Iniciar Jogo</button>
+
+      <div
+        className="dropdown-container"
+        ref={dropdownRef}
+        onMouseLeave={() => setShowDropdown(false)}
+      >
+        <button
+          className={`start-button ${showDropdown ? 'active-border' : ''}`}
+          onMouseEnter={() => setShowDropdown(true)}
+        >
+          Iniciar Jogo
+        </button>
+
+        <div className={`dropdown ${showDropdown ? 'open' : ''}`}>
+          <button onClick={() => onStart(false)} className="mode-button-0">2 Jogadores</button>
+          <button onClick={() => onStart(true)} className="mode-button-1">Contra I.A</button>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
 function Square({ value, onSquareClick, isHighlighted }: SquareProps) {
@@ -42,28 +77,34 @@ type BoardProps = {
   xIsNext: boolean;
   squares: (string | null)[];
   onPlay: (nextSquares: (string | null)[]) => void;
+  isAiMode: boolean; // <-- nova prop
 };
 
-function Board({ xIsNext, squares, onPlay }: BoardProps) {
+function Board({ xIsNext, squares, onPlay, isAiMode }: BoardProps) {
   const result = calculateWinner(squares);
   const winner = result?.winner;
   const winningLine = result?.winningLine ?? [];
 
   function handleClick(i: number) {
-    if (winner || squares[i]) return;
+    // Bloqueia clique se já houver vencedor, casa ocupada,
+    // ou se for a vez da IA no modo contra IA
+    if (winner || squares[i] || (isAiMode && !xIsNext)) return;
 
     const nextSquares = squares.slice();
     nextSquares[i] = xIsNext ? 'X' : 'O';
     onPlay(nextSquares);
   }
-
   let status;
   if (winner) {
     status = `${winner} venceu!`;
   } else if (!squares.includes(null)) {
     status = 'Empate!';
   } else {
-    status = `Próximo jogador: ${xIsNext ? 'X' : 'O'}`;
+    if (xIsNext) {
+      status = 'Próximo jogador: X';
+    } else {
+      status = isAiMode ? 'Próximo jogador: I.A' : 'Próximo jogador: O';
+    }
   }
 
   return (
@@ -92,19 +133,25 @@ function Board({ xIsNext, squares, onPlay }: BoardProps) {
 
 function App() {
   const [started, setStarted] = useState(false);
+  const [isAiMode, setIsAiMode] = useState(false);
 
   return (
     <div className="app">
       {!started ? (
-        <StartScreen onStart={() => setStarted(true)} />
+        <StartScreen
+          onStart={(aiMode: boolean) => {
+            setIsAiMode(aiMode);
+            setStarted(true);
+          }}
+        />
       ) : (
-        <Game onBack={() => setStarted(false)} />
+        <Game onBack={() => setStarted(false)} isAiMode={isAiMode} />
       )}
     </div>
   );
 }
 
-function Game({ onBack }: GameProps) {
+function Game({ onBack, isAiMode }: GameProps) {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
@@ -113,6 +160,33 @@ function Game({ onBack }: GameProps) {
   const result = calculateWinner(currentSquare);
   const winner = result?.winner;
   const isDraw = !currentSquare.includes(null) && !winner;
+
+  useEffect(() => {
+  async function makeAiMove() {
+    // IA só joga se o modo IA estiver ativo
+    if (isAiMode && !xIsNext && !winner && !isDraw) {
+      const moveIndex = await getAiMove(currentSquare);
+      console.log("IA escolheu:", moveIndex);
+
+      const isValidMove =
+        typeof moveIndex === 'number' &&
+        moveIndex >= 0 &&
+        moveIndex < 9 &&
+        !currentSquare[moveIndex];
+
+      if (isValidMove) {
+        const nextSquares = currentSquare.slice();
+        nextSquares[moveIndex] = 'O';
+        handlePlay(nextSquares);
+      } else {
+        console.warn("Jogada inválida da IA:", moveIndex);
+      }
+    }
+  }
+
+  makeAiMove();
+}, [xIsNext, currentSquare, winner, isDraw, isAiMode]);
+
 
   function handlePlay(nextSquares: (string | null)[]) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -132,6 +206,7 @@ function Game({ onBack }: GameProps) {
           xIsNext={xIsNext}
           squares={currentSquare}
           onPlay={handlePlay}
+          isAiMode={isAiMode} // <-- passar para o Board
         />
       </div>
 
@@ -144,9 +219,6 @@ function Game({ onBack }: GameProps) {
       <div className="absolute top-3 left-4">
         <button onClick={onBack}>Voltar</button>
       </div>
-
-
-
     </div>
   );
 }

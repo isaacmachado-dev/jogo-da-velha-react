@@ -3,12 +3,10 @@
 Esse é um jogo da velha com React, TypScript e Vite.
 
 
-
 # Trabalhar com o projeto localmente: 
 
 ## Requisitos:
 1. Um terminal, ou IDE de preferência. 
-
 
 ## Passos de Download:
 

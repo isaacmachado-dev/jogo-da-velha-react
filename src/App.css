@@ -12,6 +12,22 @@
 
 .start-button {
   margin-top: 40px;
+  padding: 12px 24px;
+  font-size: 18px;
+  background-color: #1a1a1a;
+  color: white;
+  border-radius: 12px;
+  position: relative;
+  z-index: 10;
+  border: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+
+
+.start-button.active-border {
+  background: white;
+  color: black;
 }
 
 .start-screen {
@@ -49,7 +65,7 @@
 
 .reset-container {
   text-align: center;
-  margin: 10px auto 2px auto;
+  margin: 10px auto 0px auto;
 }
 
 .board-row {
@@ -61,6 +77,97 @@
   height: 6em;
   will-change: filter;
   transition: filter 300ms;
+  cursor: pointer;
+
+}
+
+
+/* Container do dropdown */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown */
+.dropdown {
+  position: absolute;
+  top: calc(100% - 12px);
+  /* sobe para invadir o botão de cima */
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  z-index: 5;
+}
+
+/* Quando aberto */
+.dropdown.open {
+  opacity: 1;
+  max-height: 200px;
+}
+
+/* Botões do dropdown */
+.mode-button-0 {
+  width: 95%;
+  align-self: center;
+  justify-self: center;
+  justify-content: center;
+  padding: 50px 0px 30px;
+  font-size: 16px;
+  background-color: #1a1a1a;
+  color: white;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  margin-top: -12px;
+  /* invade o botão de cima */
+  z-index: 4;
+  position: relative;
+  overflow: hidden;
+
+
+}
+
+.mode-button-1 {
+  width: 95%;
+  align-self: center;
+  padding: 30px 24px;
+  font-size: 16px;
+  background-color: #1a1a1a;
+  color: white;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  margin-top: -12px;
+  /* invade o botão de cima */
+  z-index: 3;
+  position: relative;
+  clip-path: inset(0 round 0);
+
+}
+
+.mode-button-0:hover {
+  background-color: rgb(201, 201, 201);
+  color: black;
+  transition: 0.3s ease-out;
+}
+
+.mode-button-1:hover {
+  background-color: rgb(155, 155, 155);
+  color: black;
+  transition: 0.3s ease-out;
+}
+
+/* no hover: recorte curvo na parte de baixo */
+.mode-button-:hover {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px),
+      50% 100%, 0 calc(100% - 10px));
 }
 
 .logo:hover {
