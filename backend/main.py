@@ -5,7 +5,7 @@ import re
 import random
 
 app = Flask(__name__)
-CORS(app)  # Agora está no lugar certo
+CORS(app) 
 
 generator = pipeline(
     "text-generation",
@@ -27,13 +27,12 @@ def get_ai_move(board):
         do_sample=False
     )[0]["generated_text"].strip()
 
-    print("Resposta bruta da IA:", repr(response))  # Debug
+    print("Resposta bruta da IA:", repr(response))  
 
-    # Captura o primeiro dígito de 0 a 8
     match = re.search(r"[0-8]", response)
     move = int(match.group()) if match else -1
 
-    # Validação: se inválido ou posição ocupada, escolhe aleatória livre
+  
     if move not in range(9) or board[move] is not None:
         livres = [i for i, v in enumerate(board) if v is None]
         move = random.choice(livres) if livres else -1

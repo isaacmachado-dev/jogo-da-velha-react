@@ -1,16 +1,38 @@
-# Jogo da Velha com: React + TypeScript + Vite
+# Jogo da Velha  
+> Um Jogo da Velha, com um modo de jogo contra uma I.A neural!  
+> Projeto construído com *React, TypeScript, Python e o Vite*
 
-Esse é um jogo da velha com React, TypScript, Tailwind e Vite.
+---
 
+## 📒 Requisitos
+1. Um terminal ou IDE de preferência.  
+2. [Node.js](https://nodejs.org/pt) com o npm instalado.  
+3. [Python 3.9+](https://www.python.org/downloads/) instalado.  
+4. Bibliotecas listadas em:
+   - `jogo-da-velha/package.json`
+   - `backend/requirements.txt`
+   - `Ao rodar o python app.py será instalado a I.A localmente.`
+5. Rodar o **Back-End** *`python app.py`* caso queira jogar o modo contra a *I.A neural*.
 
-# Trabalhar com o projeto localmente: 
+## 🖥️ Passos de Download
+```bash
+git clone https://github.com/Isaac-Machado-Profissional/jogo-da-velha-react.git
+```
 
-## Requisitos:
-1. Um terminal, ou IDE de preferência. 
+## 🚀 Rodando localmente
+Garanta que está na raiz da pasta jogo-da-velha anteriormente baixada.
 
-## Passos de Download:
+```markdown
+# 1. Rodando o Front-END:
+npm install
+npm run dev
+# > Agora, para rodar o Back-END, garanta abrir uma nova janela no terminal.
+```
 
-1. git clone https://github.com/Isaac-Machado-Profissional/jogo-da-velha-react.git
-2. cd jogo-da-velha
-3. npm install
-4. npm run dev
+> Ao rodar o comando abaixo, será baixado a I.A da [PrunaAI](https://www.pruna.ai/) modelo [Falcon RW](https://huggingface.co/PrunaAI/tiiuae-falcon-rw-1b-bnb-8bit-smashed/tree/main) de 1B:
+```markdown
+# 2. Rodando o Back-END:
+cd backend
+pip install -r requirements.txt
+python app.py
+```
