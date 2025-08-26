@@ -1,8 +1,11 @@
 # Jogo da Velha  
 `Um Jogo da Velha, com um modo de jogo contra uma I.A neural!`  
-> Projeto construído com *React, TypeScript, Python e o Vite*
+> Projeto sendo construído com *React, TypeScript, Python e o Vite*   
 
 ---
+<div align="center">
+  <img src="https://img.shields.io/badge/Em%20Desenvolvimento-%23C63E3E" alt="Status">
+</div>
 
 ## 📒 Requisitos
 1. Um terminal ou IDE de preferência.  
@@ -13,6 +16,7 @@
    - *`jogo-da-velha/backend/requirements.txt`*
    - *`Ao rodar o python app.py será instalado a I.A localmente.`*
 5. Rodar o **Back-End** *`python app.py`* caso queira jogar o modo contra a *I.A neural*.
+6. Um computador capaz de rodar I.A localmente de modo estável
 
 ## 🖥️ Opções de Download
 -  ```bash
