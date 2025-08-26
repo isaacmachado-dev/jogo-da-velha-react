@@ -35,5 +35,5 @@ npm run dev
 # 2. Rodando o Back-END:
 cd backend
 pip install -r requirements.txt
-python app.py
+python main.py
 ```
