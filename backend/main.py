@@ -15,10 +15,16 @@ generator = pipeline(
 
 def get_ai_move(board):
     prompt = (
-        "You are playing as 'O' in a tic-tac-toe game.\n"
-        f"Board: {' '.join([v if v else '-' for v in board])}\n"
-        "Answer ONLY with a number from 0 to 8, no extra text."
-    )
+    "Instruction:\n"
+    "You are playing as 'O' in a tic-tac-toe game.\n"
+    f"Board: {' '.join([v if v else '-' for v in board])}\n"
+    "Follow these rules strictly:\n"
+    "1. Respond ONLY with a single number from 0 to 8 (the index of your move).\n"
+    "2. First, if you can win this turn, choose that move.\n"
+    "3. If you cannot win, block the opponent ('X') from winning next turn.\n"
+    "4. If neither is possible, choose the best strategic position in this order: center (4), corners (0, 2, 6, 8), sides (1, 3, 5, 7).\n"
+    "5. Never output anything except the chosen number.\n"
+)
 
     response = generator(
         prompt,
