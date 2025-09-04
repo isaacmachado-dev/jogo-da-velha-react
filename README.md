@@ -3,9 +3,6 @@
 > Projeto sendo construído com *React, TypeScript, Python e o Vite*   
 
 ---
-<div align="center">
-  <img src="https://img.shields.io/badge/Em%20Desenvolvimento-%23C63E3E" alt="Status">
-</div>
 
 ## 📒 Requisitos
 1. Um terminal ou IDE de preferência.  
