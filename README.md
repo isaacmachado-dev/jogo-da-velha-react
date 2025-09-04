@@ -4,6 +4,10 @@
 
 ---
 
+<div align="center">
+  <img src="https://img.shields.io/badge/Em%20Desenvolvimento-%23C63E3E" alt="Status">
+</div>
+
 ## 📒 Requisitos
 1. Um terminal ou IDE de preferência.  
 2. [Node.js](https://nodejs.org/pt) com o npm instalado.  
