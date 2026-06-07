@@ -1,6 +1,6 @@
 # Jogo da Velha  
 `Um Jogo da Velha, com um modo de jogo contra uma I.A neural!`  
-> Projeto sendo construído com *React, TypeScript, Python e o Vite*   
+> Projeto sendo construído com *React, TypeScript, Python, Vite e o Capacitor*   
 
 ---
 
@@ -20,10 +20,15 @@
 6. Um computador capaz de rodar I.A localmente de modo estável
 
 ## 🖥️ Opções de Download
--  ```bash
+-  Baixar projeto com git:
+  ```bash
    git clone https://github.com/Isaac-Machado-Profissional/jogo-da-velha-react.git
    ```
--  https://github.com/Isaac-Machado-Profissional/jogo-da-velha-react/archive/refs/heads/main.zip
+-  Baixar projeto via link:  
+  https://github.com/Isaac-Machado-Profissional/jogo-da-velha-react/archive/refs/heads/main.zip
+
+-  Baixar apk(Apenas modo 2 jogadores):  
+  [`jogo-da-velha.apk`](https://github.com/isaacmachado-dev/jogo-da-velha-ai/releases/download/v0.3.0/jogo-da-velha.apk) 
 
 ## 🚀 Rodando localmente
 Garanta que está na raiz da pasta jogo-da-velha anteriormente baixada.
