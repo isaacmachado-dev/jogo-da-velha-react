@@ -75,10 +75,14 @@
 
 .logo {
   height: 6em;
-  will-change: filter;
-  transition: filter 300ms;
   cursor: pointer;
+  color: black;
+  transition: color 300ms, filter 300ms;
+}
 
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #5a2dd49d);
 }
 
 
@@ -170,10 +174,17 @@
       50% 100%, 0 calc(100% - 10px));
 }
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #5a2dd49d);
+
+@media (prefers-color-scheme: dark) {
+  .logo {
+    color: white;
+  }
+
+  .logo:hover {
+    filter: drop-shadow(0 0 2em #5a2dd49d);
+  }
 }
 
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #680cbe9d);
+.logo:hover {
+  filter: drop-shadow(0 0 2em #5a2dd49d);
 }

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
 import './App.css';
-import hashIcon from './assets/hash.svg';
 import { getAiMove } from './services/aiService';
 
 
@@ -20,20 +19,54 @@ type GameProps = {
 function StartScreen({ onStart }: { onStart: (aiMode: boolean) => void }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const startButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Fecha dropdown ao clicar fora
+  // Foca o botão ao montar — limpa o foco residual do botão "Voltar"
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    startButtonRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    let active = false;
+    const timer = setTimeout(() => { active = true; }, 300);
+
+    function handleClickOutside(event: PointerEvent) {
+      if (!active) return;
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+
+    document.addEventListener('pointerup', handleClickOutside, { capture: true });
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('pointerup', handleClickOutside, { capture: true });
+    };
   }, []);
 
+
   function logo() {
-    return <img src={hashIcon} alt="Hash Icon" className="logo" />;
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="96" height="96"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="logo"
+      >
+        <line x1="4" x2="20" y1="9" y2="9" />
+        <line x1="4" x2="20" y1="15" y2="15" />
+        <line x1="10" x2="8" y1="3" y2="21" />
+        <line x1="16" x2="14" y1="3" y2="21" />
+      </svg>
+    );
   }
 
   return (
@@ -41,21 +74,29 @@ function StartScreen({ onStart }: { onStart: (aiMode: boolean) => void }) {
       {logo()}
       <h1>Jogo da Velha</h1>
 
-      <div
-        className="dropdown-container"
-        ref={dropdownRef}
-        onMouseLeave={() => setShowDropdown(false)}
-      >
+      <div className="dropdown-container" ref={dropdownRef}>
+        {/* Adiciona a ref no botão */}
         <button
+          ref={startButtonRef}
           className={`start-button ${showDropdown ? 'active-border' : ''}`}
-          onMouseEnter={() => setShowDropdown(true)}
+          onClick={() => setShowDropdown(prev => !prev)}
         >
           Iniciar Jogo
         </button>
 
         <div className={`dropdown ${showDropdown ? 'open' : ''}`}>
-          <button onClick={() => onStart(false)} className="mode-button-0">2 Jogadores</button>
-          <button onClick={() => onStart(true)} className="mode-button-1">Contra I.A</button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onStart(false); }}
+            className="mode-button-0"
+          >
+            2 Jogadores
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onStart(true); }}
+            className="mode-button-1"
+          >
+            Contra I.A
+          </button>
         </div>
       </div>
     </div>
@@ -162,30 +203,30 @@ function Game({ onBack, isAiMode }: GameProps) {
   const isDraw = !currentSquare.includes(null) && !winner;
 
   useEffect(() => {
-  async function makeAiMove() {
-    // IA só joga se o modo IA estiver ativo
-    if (isAiMode && !xIsNext && !winner && !isDraw) {
-      const moveIndex = await getAiMove(currentSquare);
-      console.log("IA escolheu:", moveIndex);
+    async function makeAiMove() {
+      // IA só joga se o modo IA estiver ativo
+      if (isAiMode && !xIsNext && !winner && !isDraw) {
+        const moveIndex = await getAiMove(currentSquare);
+        console.log("IA escolheu:", moveIndex);
 
-      const isValidMove =
-        typeof moveIndex === 'number' &&
-        moveIndex >= 0 &&
-        moveIndex < 9 &&
-        !currentSquare[moveIndex];
+        const isValidMove =
+          typeof moveIndex === 'number' &&
+          moveIndex >= 0 &&
+          moveIndex < 9 &&
+          !currentSquare[moveIndex];
 
-      if (isValidMove) {
-        const nextSquares = currentSquare.slice();
-        nextSquares[moveIndex] = 'O';
-        handlePlay(nextSquares);
-      } else {
-        console.warn("Jogada inválida da IA:", moveIndex);
+        if (isValidMove) {
+          const nextSquares = currentSquare.slice();
+          nextSquares[moveIndex] = 'O';
+          handlePlay(nextSquares);
+        } else {
+          console.warn("Jogada inválida da IA:", moveIndex);
+        }
       }
     }
-  }
 
-  makeAiMove();
-}, [xIsNext, currentSquare, winner, isDraw, isAiMode]);
+    makeAiMove();
+  }, [xIsNext, currentSquare, winner, isDraw, isAiMode]);
 
 
   function handlePlay(nextSquares: (string | null)[]) {
